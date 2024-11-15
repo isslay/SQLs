@@ -1,0 +1,18 @@
+CREATE USER 'app_user'@'%' IDENTIFIED BY 'dev_app';
+GRANT Alter ON *.* TO 'app_user'@'%';
+GRANT Create ON *.* TO 'app_user'@'%';
+GRANT Create view ON *.* TO 'app_user'@'%';
+GRANT Delete ON *.* TO 'app_user'@'%';
+GRANT Drop ON *.* TO 'app_user'@'%' WITH GRANT OPTION;
+GRANT Index ON *.* TO 'app_user'@'%';
+GRANT Insert ON *.* TO 'app_user'@'%';
+GRANT References ON *.* TO 'app_user'@'%';
+GRANT Select ON *.* TO 'app_user'@'%';
+GRANT Show view ON *.* TO 'app_user'@'%';
+GRANT Trigger ON *.* TO 'app_user'@'%';
+GRANT Update ON *.* TO 'app_user'@'%';
+GRANT Alter routine ON *.* TO 'app_user'@'%';
+GRANT Create routine ON *.* TO 'app_user'@'%';
+GRANT Create temporary tables ON *.* TO 'app_user'@'%';
+GRANT Execute ON *.* TO 'app_user'@'%';
+GRANT Lock tables ON *.* TO 'app_user'@'%' WITH GRANT OPTION;
