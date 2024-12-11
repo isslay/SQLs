@@ -1,5 +1,5 @@
 CREATE VIEW vw_teyaotong_products AS
-select DISTINCT id FROM pharma
+select distinct id, product_name, manufacturer, generic_name,specification  from medication_info; 
 
 CREATE VIEW vw_teyaotong_doctors AS
 select a.id, a.name, a.dept_name 
@@ -13,4 +13,16 @@ select id,name from dict where parent_id =1010 and state=0;
 
 CREATE VIEW vw_teyaotong_form AS
 select id,name from dict where parent_id =1027 and state=0;
+
+
+CREATE VIEW vw_teyaotong_groups AS
+SELECT 
+    doctor_id,
+    GROUP_CONCAT(group_id ORDER BY group_id SEPARATOR ',') AS group_ids
+FROM 
+    doctor_group_member
+WHERE 
+    state = 0
+GROUP BY 
+    doctor_id;
 

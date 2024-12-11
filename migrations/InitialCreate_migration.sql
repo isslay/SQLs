@@ -8,20 +8,7 @@ START TRANSACTION;
 
 ALTER DATABASE CHARACTER SET utf8mb4;
 
-CREATE TABLE `medical_guidance` (
-    `Id` int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
-    `product_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-    `generic_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-    `type_id` INT NOT NULL COMMENT '分类',
-    `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '内容',
-    `create_time` DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` DATETIME NULL COMMENT '更新时间',
-    `is_active` tinyint(1) NOT NULL DEFAULT TRUE COMMENT 'True为有效，False为失效',
-    `latest_operator` INT NOT NULL COMMENT '操作者',
-    CONSTRAINT `PK_medical_guidance` PRIMARY KEY (`Id`)
-) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='医疗指导';
-
-CREATE TABLE `pharmaceuticals` (
+CREATE TABLE `medication_info` (
     `id` int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `product_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `manufacturer` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
@@ -37,6 +24,7 @@ CREATE TABLE `pharmaceuticals` (
     `create_time` DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NULL COMMENT '修改时间',
     `latest_operator` INT NULL COMMENT '操作者',
+    `group_ids` json NOT NULL COMMENT 'Group IDs, stored as JSON array',
     CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
 ) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='特药通药品信息表';
 
@@ -44,9 +32,9 @@ CREATE TABLE `medication_records` (
     `Id` int NOT NULL COMMENT 'ID' AUTO_INCREMENT,
     `pharmaceutical_id` int NOT NULL COMMENT '药品ID',
     `patient_id` char(36) COLLATE ascii_general_ci NOT NULL COMMENT '患者ID',
-    `doctor_id` char(36) COLLATE ascii_general_ci NOT NULL COMMENT '医生ID',
-    `medication_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用药日期',
-    `medication_quantity` INT NOT NULL DEFAULT 0 COMMENT '用药数量',
+    `doctor_id` int NOT NULL COMMENT '医生ID',
+    `medication_date` date NOT NULL COMMENT '用药日期',
+    `medication_quantity` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '用药数量',
     `disease` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '所患疾病',
     `new_patient` tinyint(1) NOT NULL DEFAULT FALSE COMMENT '是否新患',
     `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '备注',
@@ -54,21 +42,28 @@ CREATE TABLE `medication_records` (
     `updated_at` datetime NULL COMMENT '更新时间',
     `is_active` tinyint(1) NOT NULL DEFAULT TRUE COMMENT '是否有效',
     `last_operator` INT NOT NULL COMMENT '更新者',
+    `group_ids` json NOT NULL COMMENT 'Group IDs, stored as JSON array',
     CONSTRAINT `PK_medication_records` PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_medication_records_pharmaceuticals_pharmaceutical_id` FOREIGN KEY (`pharmaceutical_id`) REFERENCES `pharmaceuticals` (`id`) ON DELETE CASCADE
+    CONSTRAINT `FK_medication_records_medication_info_pharmaceutical_id` FOREIGN KEY (`pharmaceutical_id`) REFERENCES `medication_info` (`id`) ON DELETE CASCADE
 ) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用药记录';
 
-CREATE UNIQUE INDEX `uk_medical_guidance` ON `medical_guidance` (`product_name`, `generic_name`, `type_id`, `is_active`);
+CREATE INDEX `IX_medication_info_form_id` ON `medication_info` (`form_id`);
+
+CREATE INDEX `IX_medication_info_insurance_status` ON `medication_info` (`insurance_status`);
+
+CREATE INDEX `IX_medication_info_latest_operator` ON `medication_info` (`latest_operator`);
+
+CREATE UNIQUE INDEX `uk_medication_info` ON `medication_info` (`id`, `insurance_code`, `is_active`);
 
 CREATE INDEX `IX_medication_records_doctor_id` ON `medication_records` (`doctor_id`);
+
+CREATE INDEX `IX_medication_records_last_operator` ON `medication_records` (`last_operator`);
 
 CREATE INDEX `IX_medication_records_patient_id` ON `medication_records` (`patient_id`);
 
 CREATE INDEX `IX_medication_records_pharmaceutical_id` ON `medication_records` (`pharmaceutical_id`);
 
-CREATE UNIQUE INDEX `uk_pharmaceuticals` ON `pharmaceuticals` (`id`, `insurance_code`, `is_active`);
-
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20241203063905_InitialCreate', '8.0.10');
+VALUES ('20241211051829_InitDev', '8.0.10');
 
 COMMIT;
