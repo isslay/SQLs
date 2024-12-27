@@ -1,0 +1,19 @@
+CREATE TABLE `pres_main` (
+  `bill_no` varchar(30) NOT NULL,
+  `bill_code` varchar(30) DEFAULT NULL,
+  `contact` varchar(30) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `hospital_name` varchar(50) DEFAULT NULL,
+  `hospital_code` varchar(20) DEFAULT NULL,
+  `open_phy_name` varchar(30) DEFAULT NULL,
+  `open_phy_code` varchar(20) DEFAULT NULL,
+  `offices_name` varchar(30) DEFAULT NULL,
+  `offices_code` varchar(20) DEFAULT NULL,
+  `age` varchar(3) DEFAULT NULL,
+  `gender` char(1) DEFAULT NULL,
+  `suffer_dis` varchar(50) DEFAULT NULL,
+  `is_new` char(1) DEFAULT NULL,
+  `id_card` varchar(50) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`bill_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
