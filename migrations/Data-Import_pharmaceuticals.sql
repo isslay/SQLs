@@ -1,13 +1,13 @@
 
 -- Step 1, 重建medications' index。去掉 drug_list 中的换行符
-ALTER TABLE unqc1001.medications DROP INDEX uk_medications;
+ALTER TABLE unqc1001.medications DROP INDEX medications_name_IDX;
 CREATE UNIQUE INDEX medications_name_IDX USING BTREE ON unqc1001.medications (name,generic_name,manufacturer_id,state);
 update wmdb_v2.drug_list set dl_drug_name=REPLACE (REPLACE (dl_drug_name,'\n',''),'\r',''),dl_trade_name =REPLACE (REPLACE (dl_trade_name,'\n',''),'\r','')
 
 -- Step 2, 根据drug_list， 补充供应商表 392 rows
 insert into manufacturers(org_id,name,short_name,state,created_at,updated_at)
 select distinct '2SE04XzvbYRzVlcK' as org_id,d.dl_manufacturer as name, d.dl_manufacturer as short_name, 0 as state , CURRENT_TIMESTAMP() as created_at, CURRENT_TIMESTAMP() as updated_at  
-from wmdb_v2.drug_list d left join manufacturers m on d.dl_manufacturer LIKE CONCAT('%', m.short_name, '%')
+from wmdb_v2.drug_list d left join manufacturers m on d.dl_manufacturer LIKE CONCAT('%', m.short_name, '%');
 WHERE m.name IS NULL AND d.dl_manufacturer IS NOT NULL and d.dl_status =0;
 
 -- Step 3, 根据drug_list表，补充medications 缺失数据. 1119 rows
