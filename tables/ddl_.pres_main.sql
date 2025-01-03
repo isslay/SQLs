@@ -1,6 +1,7 @@
 CREATE TABLE `pres_main` (
   `bill_no` varchar(30) NOT NULL,
   `bill_code` varchar(30) DEFAULT NULL,
+  `dates` varchar(20) DEFAULT NULL,
   `contact` varchar(30) DEFAULT NULL,
   `mobile` varchar(50) DEFAULT NULL,
   `hospital_name` varchar(50) DEFAULT NULL,
@@ -15,5 +16,11 @@ CREATE TABLE `pres_main` (
   `is_new` char(1) DEFAULT NULL,
   `id_card` varchar(50) DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `indication_id` varchar(20) DEFAULT NULL COMMENT 'Indication ID',
+  `indication_name` varchar(500) DEFAULT NULL COMMENT 'Indication Name',
+  `follow_up` char(1) DEFAULT NULL COMMENT 'Follow Up (Y/N)',
+  `soldier_family` char(1) DEFAULT NULL COMMENT 'Soldier Family (Y/N)',
   PRIMARY KEY (`bill_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
