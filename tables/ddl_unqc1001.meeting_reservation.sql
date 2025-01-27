@@ -15,7 +15,7 @@ CREATE TABLE `meeting_reservation` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会议室预定';
 
-CREATE TABLE `dict_meeting_room` (
+CREATE TABLE `meeting_room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `room_name` varchar(255) DEFAULT NULL COMMENT '名称',
   `created_at` datetime DEFAULT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `dict_meeting_room` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会议室设置';
 ALTER TABLE meeting_reservation AUTO_INCREMENT = 1;
 
-insert into unqc1001.dict_meeting_room (id,room_name)
+insert into unqc1001.meeting_room (id,room_name)
 select id, room_name from wmdb_v2.jd_meeting_dict;
 insert into unqc1001.meeting_reservation (room_id,meet_date,meet_begin,meet_end,meet_title,meet_remark,book_person,book_department)
 select room_id ,meet_date ,begin_time, end_time,meet_title ,meet_remark ,order_person,order_department from wmdb_v2.jd_meeting_reservation;
